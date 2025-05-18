@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCM Estimator Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --primary-color: #ff6f61;
+            --secondary-color: #4a90e2;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --button-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            --gradient: linear-gradient(135deg, #ff6f61, #4a90e2);
+            --focus-color: #4a90e2;
+            --input-bg: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .app-container {
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            max-width: 1200px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 500;
+            flex: 0 0 120px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 12px;
+            background: var(--input-bg);
+            min-width: 0;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--focus-color);
+            box-shadow: 0 0 4px rgba(74, 144, 226, 0.3);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group label {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        caption {
+            text-align: left;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        td input {
+            width: 60px;
+            text-align: center;
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 8px;
+        }
+
+        .summary-table input {
+            width: 80px;
+            background: var(--input-bg);
+        }
+
+        .opportunity-management {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 500px;
+        }
+
+        .project-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        button:hover {
+            background: #e65b50;
+            transform: translateY(-1px);
+        }
+
+        button:focus {
+            outline: 2px solid var(--focus-color);
+            outline-offset: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            font-size: 10px;
+            color: var(--text-color);
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        footer .creator {
+            flex: 0 0 auto;
+        }
+
+        footer .confidential {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                border-radius: 8px;
+            }
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            label {
+                flex: none;
+                margin-bottom: 4px;
+            }
+            input[type="text"],
+            input[type="number"],
+            select {
+                width: 100%;
+            }
+            .project-details-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .summary-table th, .summary-table td {
+                padding: 6px;
+            }
+            .summary-table input {
+                width: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            .section {
+                padding: 12px;
+            }
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            footer .confidential {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app-container" role="main">
+        <header>
+            <h1>HCM Estimator Tool</h1>
+            <p>Effortlessly estimate HCM project efforts.</p>
+        </header>
+
+        <section class="section" id="opportunitySection">
+            <h2>Opportunity</h2>
+            <div class="opportunity-management">
+                <div class="form-group">
+                    <label for="searchInput">Search Existing</label>
+                    <input type="text" id="searchInput" placeholder="Enter keyword" aria-label="Search opportunities by keyword">
+                    <button type="button" id="searchBtn">Search</button>
+                    <button type="button" id="createNewBtn">Create New Opportunity</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section hidden" id="projectDetailsSection">
+            <div class="project-details-header">
+                <h2>Project Details</h2>
+            </div>
+            <div class="form-group">
+                <label for="oppName">Opportunity Name</label>
+                <input type="text" id="oppName" placeholder="Enter name" aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="countryCount">Country Count</label>
+                <input type="number" id="countryCount" min="1" placeholder="e.g., 1" aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="empCount">Employee Count</label>
+                <input type="number" id="empCount" min="0" placeholder="e.g., 3300" aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="payrollCount">Payrolls</label>
+                <input type="number" id="payrollCount" min="1" placeholder="e.g., 1" aria-required="true">
+            </div>
+            <div class="form-group">
+                <label for="dealSize">Deal Size ($M)</label>
+                <select id="dealSize" aria-label="Select deal size">
+                    <option value="">Select Deal Size</option>
+                    <option value="less1">Less than 1M</option>
+                    <option value="1to3">1-3M</option>
+                    <option value="greater3">Greater than 3M</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="oppStatus">Opportunity Status</label>
+                <select id="oppStatus" aria-label="Select opportunity status">
+                    <option value="">Select Status</option>
+                    <option value="new">New</option>
+                    <option value="inprogress">In Progress</option>
+                    <option value="won">Won</option>
+                    <option value="lost">Lost</option>
+                    <option value="archived">Archived</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="section hidden" id="modulesSection">
+            <h2>Modules</h2>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="module" value="Core HR"> Core HR (110)</label>
+                <label><input type="checkbox" name="module" value="Absence"> Absence (90)</label>
+                <label><input type="checkbox" name="module" value="OTL"> OTL (100)</label>
+                <label><input type="checkbox" name="module" value="Payroll"> Payroll (180)</label>
+                <label><input type="checkbox" name="module" value="ORC"> ORC (90)</label>
+                <label><input type="checkbox" name="module" value="Talent"> Talent (80)</label>
+                <label><input type="checkbox" name="module" value="Compensation"> Compensation (70)</label>
+                <label><input type="checkbox" name="module" value="HR Helpdesk"> HR Helpdesk (60)</label>
+                <label><input type="checkbox" name="module" value="Learn"> Learn (60)</label>
+            </div>
+        </section>
+
+        <section class="section hidden" id="technicalEffortsSection">
+            <h2>Technical Efforts</h2>
+            <table>
+                <caption>Integrations Effort Breakdown</caption>
+                <thead>
+                    <tr><th scope="col">Complexity</th><th scope="col">Count</th><th scope="col">Base Efforts</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simple</td>
+                        <td><label for="intSimple" class="visually-hidden">Simple Integrations Count</label><input type="number" id="intSimple" min="0" placeholder="0"></td>
+                        <td>5</td>
+                        <td id="intSimpleTotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Medium</td>
+                        <td><label for="intMedium" class="visually-hidden">Medium Integrations Count</label><input type="number" id="intMedium" min="0" placeholder="0"></td>
+                        <td>10</td>
+                        <td id="intMediumTotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Complex</td>
+                        <td><label for="intComplex" class="visually-hidden">Complex Integrations Count</label><input type="number" id="intComplex" min="0" placeholder="0"></td>
+                        <td>15</td>
+                        <td id="intComplexTotal">0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <caption>Extensions Effort Breakdown</caption>
+                <thead>
+                    <tr><th scope="col">Complexity</th><th scope="col">Count</th><th scope="col">Base Efforts</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simple</td>
+                        <td><label for="extSimple" class="visually-hidden">Simple Extensions Count</label><input type="number" id="extSimple" min="0" placeholder="0"></td>
+                        <td>15</td>
+                        <td id="extSimpleTotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Medium</td>
+                        <td><label for="extMedium" class="visually-hidden">Medium Extensions Count</label><input type="number" id="extMedium" min="0" placeholder="0"></td>
+                        <td>30</td>
+                        <td id="extMediumTotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Complex</td>
+                        <td><label for="extComplex" class="visually-hidden">Complex Extensions Count</label><input type="number" id="extComplex" min="0" placeholder="0"></td>
+                        <td>45</td>
+                        <td id="extComplexTotal">0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <caption>Reports Effort Breakdown</caption>
+                <thead>
+                    <tr><th scope="col">Complexity</th><th scope="col">Count</th><th scope="col">Base Efforts</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Simple</td>
+                        <td><label for="repSimple" class="visually-hidden">Simple Reports Count</label><input type="number" id="repSimple" min="0" placeholder="0"></td>
+                        <td>3</td>
+                        <td id="repSimpleTotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Medium</td>
+                        <td><label for="repMedium" class="visually-hidden">Medium Reports Count</label><input type="number" id="repMedium" min="0" placeholder="0"></td>
+                        <td>5</td>
+                        <td id="repMediumTotal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Complex</td>
+                        <td><label for="repComplex" class="visually-hidden">Complex Reports Count</label><input type="number" id="repComplex" min="0" placeholder="0"></td>
+                        <td>8</td>
+                        <td id="repComplexTotal">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section hidden" id="dataMigrationSection">
+            <h2>Data Migration</h2>
+            <div class="form-group">
+                <label for="dmComplexity">Complexity</label>
+                <select id="dmComplexity" aria-label="Select data migration complexity">
+                    <option value="">Select Complexity</option>
+                    <option value="Low">Low (<5000)</option>
+                    <option value="Low - Moderate">Low - Moderate (5000-15000)</option>
+                    <option value="Moderate">Moderate (15000-25000)</option>
+                    <option value="Moderate - High">Moderate - High (25000-50000)</option>
+                    <option value="High">High (50000-80000)</option>
+                    <option value="Very High">Very High (>80000)</option>
+                </select>
+            </div>
+            <table>
+                <caption>Data Migration Effort Breakdown</caption>
+                <thead>
+                    <tr><th scope="col">Extraction</th><th scope="col">Transformation</th><th scope="col">Load</th><th scope="col">Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><label for="dmExtraction" class="visually-hidden">Extraction Efforts</label><input type="number" id="dmExtraction" min="0" placeholder="0"></td>
+                        <td><label for="dmTransformation" class="visually-hidden">Transformation Efforts</label><input type="number" id="dmTransformation" min="0" placeholder="0"></td>
+                        <td><label for="dmLoad" class="visually-hidden">Load Efforts</label><input type="number" id="dmLoad" min="0" placeholder="0"></td>
+                        <td id="dmTotal">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section hidden" id="parametersSection">
+            <h2>Parameters & Team Split</h2>
+            <div class="form-group">
+                <label for="contingency">Contingency (%)</label>
+                <input type="number" id="contingency" min="0" placeholder="e.g., 30">
+            </div>
+            <div class="form-group">
+                <label for="ipCount">IP Count</label>
+                <input type="number" id="ipCount" min="0" placeholder="e.g., 0">
+            </div>
+            <table>
+                <caption>Team Split and Rates</caption>
+                <thead>
+                    <tr><th scope="col">Team</th><th scope="col">Rate ($)</th><th scope="col">Split (%)</th><th scope="col">Mandays</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MEO</td>
+                        <td>950</td>
+                        <td><label for="teamMEO" class="visually-hidden">MEO Split Percentage</label><input type="number" id="teamMEO" min="0" max="100" placeholder="e.g., 30"></td>
+                        <td id="meoMandays">0</td>
+                    </tr>
+                    <tr>
+                        <td>GSC</td>
+                        <td>350</td>
+                        <td><label for="teamGSC" class="visually-hidden">GSC Split Percentage</label><input type="number" id="teamGSC" min="0" max="100" placeholder="e.g., 50"></td>
+                        <td id="gscMandays">0</td>
+                    </tr>
+                    <tr>
+                        <td>Pharos</td>
+                        <td>250</td>
+                        <td><label for="teamPharos" class="visually-hidden">Pharos Split Percentage</label><input type="number" id="teamPharos" min="0" max="100" placeholder="e.g., 20"></td>
+                        <td id="pharosMandays">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section hidden" id="summarySection">
+            <h2>Summary</h2>
+            <table class="summary-table">
+                <caption>Project Effort and Cost Summary</caption>
+                <thead>
+                    <tr><th scope="col">Category</th><th scope="col">Mandays</th><th scope="col">Cost ($)</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Functional</td>
+                        <td><label for="funcEfforts" class="visually-hidden">Functional Efforts</label><input type="text" id="funcEfforts" value="0" readonly></td>
+                        <td><label for="funcCost" class="visually-hidden">Functional Cost</label><input type="text" id="funcCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Technical</td>
+                        <td><label for="techEfforts" class="visually-hidden">Technical Efforts</label><input type="text" id="techEfforts" value="0" readonly></td>
+                        <td><label for="techCost" class="visually-hidden">Technical Cost</label><input type="text" id="techCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Data Migration</td>
+                        <td><label for="dmEfforts" class="visually-hidden">Data Migration Efforts</label><input type="text" id="dmEfforts" value="0" readonly></td>
+                        <td><label for="dmCost" class="visually-hidden">Data Migration Cost</label><input type="text" id="dmCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Base Total</td>
+                        <td><label for="baseTotal" class="visually-hidden">Base Total Efforts</label><input type="text" id="baseTotal" value="0" readonly></td>
+                        <td><label for="baseCost" class="visually-hidden">Base Total Cost</label><input type="text" id="baseCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>PM</td>
+                        <td><label for="pmEfforts" class="visually-hidden">Project Management Efforts</label><input type="text" id="pmEfforts" value="220" readonly></td>
+                        <td><label for="pmCost" class="visually-hidden">Project Management Cost</label><input type="text" id="pmCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>OSSA</td>
+                        <td><label for="ossaEfforts" class="visually-hidden">OSSA Efforts</label><input type="text" id="ossaEfforts" value="29" readonly></td>
+                        <td><label for="ossaCost" class="visually-hidden">OSSA Cost</label><input type="text" id="ossaCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Grand Total</td>
+                        <td><label for="grandTotal" class="visually-hidden">Grand Total Efforts</label><input type="text" id="grandTotal" value="0" readonly></td>
+                        <td><label for="grandCost" class="visually-hidden">Grand Total Cost</label><input type="text" id="grandCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>With Contingency</td>
+                        <td><label for="contingencyTotal" class="visually-hidden">Contingency Total Efforts</label><input type="text" id="contingencyTotal" value="0" readonly></td>
+                        <td><label for="contingencyCost" class="visually-hidden">Contingency Total Cost</label><input type="text" id="contingencyCost" value="0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Post IP Reduction</td>
+                        <td><label for="ipTotal" class="visually-hidden">IP Reduction Total Efforts</label><input type="text" id="ipTotal" value="0" readonly></td>
+                        <td><label for="ipCost" class="visually-hidden">IP Reduction Total Cost</label><input type="text" id="ipCost" value="0" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="button-group hidden" id="buttonGroup">
+            <button type="button" id="saveButton">Save</button>
+            <button type="button" id="resetButton">Reset</button>
+        </div>
+
+        <footer>
+            <div class="creator">Creator: Mani Iyer</div>
+            <div class="confidential">Confidential @ Oracle 2025</div>
+        </footer>
+    </main>
+
+    <script>
+        const modules = {
+            "Core HR": 110,
+            "Absence": 90,
+            "OTL": 100,
+            "Payroll": 180,
+            "ORC": 90,
+            "Talent": 80,
+            "Compensation": 70,
+            "HR Helpdesk": 60,
+            "Learn": 60
+        };
+
+        const dataMigration = {
+            "Low": { extraction: 40, transformation: 160, load: 60, total: 260 },
+            "Low - Moderate": { extraction: 40, transformation: 180, load: 80, total: 300 },
+            "Moderate": { extraction: 40, transformation: 180, load: 160, total: 380 },
+            "Moderate - High": { extraction: 40, transformation: 180, load: 280, total: 500 },
+            "High": { extraction: 40, transformation: 200, load: 400, total: 640 },
+            "Very High": { extraction: 40, transformation: 200, load: 500, total: 740 }
+        };
+
+        const teamRates = {
+            MEO: { rate: 950, split: 30 },
+            GSC: { rate: 350, split: 50 },
+            Pharos: { rate: 250, split: 20 }
+        };
+
+        let opportunities = [];
+        try {
+            opportunities = JSON.parse(localStorage.getItem('hcmOpportunities') || '[]');
+        } catch (e) {
+            console.error('Error parsing opportunities:', e);
+        }
+
+        function debounce(fn, ms) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn(...args), ms);
+            };
+        }
+
+        function calculate() {
+            const countryCount = parseInt(document.getElementById('countryCount').value) || 1;
+            const payrollCount = parseInt(document.getElementById('payrollCount').value) || 1;
+            const contingency = parseInt(document.getElementById('contingency').value) / 100 || 0;
+            const ipCount = parseInt(document.getElementById('ipCount').value) || 0;
+
+            const selectedModules = Array.from(document.querySelectorAll('input[name="module"]:checked')).map(cb => cb.value);
+            let funcEfforts = 0;
+            selectedModules.forEach(module => {
+                const baseEffort = modules[module];
+                const effort = module === "Payroll" ? baseEffort * (1 + 0.4 * (payrollCount - 1)) * countryCount : baseEffort * countryCount;
+                funcEfforts += effort;
+            });
+
+            const intSimple = parseInt(document.getElementById('intSimple').value) || 0;
+            const intMedium = parseInt(document.getElementById('intMedium').value) || 0;
+            const intComplex = parseInt(document.getElementById('intComplex').value) || 0;
+            const extSimple = parseInt(document.getElementById('extSimple').value) || 0;
+            const extMedium = parseInt(document.getElementById('extMedium').value) || 0;
+            const extComplex = parseInt(document.getElementById('extComplex').value) || 0;
+            const repSimple = parseInt(document.getElementById('repSimple').value) || 0;
+            const repMedium = parseInt(document.getElementById('repMedium').value) || 0;
+            const repComplex = parseInt(document.getElementById('repComplex').value) || 0;
+
+            const intEfforts = (intSimple * 5) + (intMedium * 10) + (intComplex * 15);
+            const extEfforts = (extSimple * 15) + (extMedium * 30) + (extComplex * 45);
+            const repEfforts = (repSimple * 3) + (repMedium * 5) + (repComplex * 8);
+            const techEfforts = intEfforts + extEfforts + repEfforts;
+
+            document.getElementById('intSimpleTotal').textContent = intSimple * 5;
+            document.getElementById('intMediumTotal').textContent = intMedium * 10;
+            document.getElementById('intComplexTotal').textContent = intComplex * 15;
+            document.getElementById('extSimpleTotal').textContent = extSimple * 15;
+            document.getElementById('extMediumTotal').textContent = extMedium * 30;
+            document.getElementById('extComplexTotal').textContent = extComplex * 45;
+            document.getElementById('repSimpleTotal').textContent = repSimple * 3;
+            document.getElementById('repMediumTotal').textContent = repMedium * 5;
+            document.getElementById('repComplexTotal').textContent = repComplex * 8;
+
+            const dmExtraction = parseInt(document.getElementById('dmExtraction').value) || 0;
+            const dmTransformation = parseInt(document.getElementById('dmTransformation').value) || 0;
+            const dmLoad = parseInt(document.getElementById('dmLoad').value) || 0;
+            const dmEfforts = dmExtraction + dmTransformation + dmLoad;
+            document.getElementById('dmTotal').textContent = dmEfforts;
+
+            const baseTotal = techEfforts + dmEfforts + funcEfforts;
+            const pmEfforts = 220;
+            const ossaEfforts = 29;
+            const grandTotal = baseTotal + pmEfforts + ossaEfforts;
+            const contingencyTotal = grandTotal * (1 + contingency);
+            const ipTotal = contingencyTotal - (ipCount * 3);
+
+            const meoSplit = parseInt(document.getElementById('teamMEO').value) || 0;
+            const gscSplit = parseInt(document.getElementById('teamGSC').value) || 0;
+            const pharosSplit = parseInt(document.getElementById('teamPharos').value) || 0;
+            const totalSplit = meoSplit + gscSplit + pharosSplit;
+
+            if (totalSplit !== 100 && totalSplit !== 0) {
+                alert('Team split percentages must total 100% or be left blank.');
+                resetSummary();
+                return;
+            }
+
+            const finalEfforts = ipCount > 0 && ipTotal > 0 ? ipTotal : contingencyTotal;
+            const meoMandays = totalSplit ? finalEfforts * (meoSplit / 100) : 0;
+            const gscMandays = totalSplit ? finalEfforts * (gscSplit / 100) : 0;
+            const pharosMandays = totalSplit ? finalEfforts * (pharosSplit / 100) : 0;
+
+            document.getElementById('meoMandays').textContent = meoMandays.toFixed(2);
+            document.getElementById('gscMandays').textContent = gscMandays.toFixed(2);
+            document.getElementById('pharosMandays').textContent = pharosMandays.toFixed(2);
+
+            const meoCost = meoMandays * teamRates.MEO.rate;
+            const gscCost = gscMandays * teamRates.GSC.rate;
+            const pharosCost = pharosMandays * teamRates.Pharos.rate;
+            const totalCost = meoCost + gscCost + pharosCost;
+
+            const pmCost = pmEfforts * teamRates.MEO.rate;
+            const ossaCost = ossaEfforts * teamRates.GSC.rate;
+
+            updateSummary(funcEfforts, techEfforts, dmEfforts, baseTotal, pmEfforts, ossaEfforts, grandTotal, contingencyTotal, ipTotal, totalCost, finalEfforts, pmCost, ossaCost);
+        }
+
+        function updateSummary(funcEfforts, techEfforts, dmEfforts, baseTotal, pmEfforts, ossaEfforts, grandTotal, contingencyTotal, ipTotal, totalCost, finalEfforts, pmCost, ossaCost) {
+            document.getElementById('funcEfforts').value = funcEfforts.toFixed(2);
+            document.getElementById('techEfforts').value = techEfforts.toFixed(2);
+            document.getElementById('dmEfforts').value = dmEfforts.toFixed(2);
+            document.getElementById('baseTotal').value = baseTotal.toFixed(2);
+            document.getElementById('pmEfforts').value = pmEfforts.toFixed(2);
+            document.getElementById('ossaEfforts').value = ossaEfforts.toFixed(2);
+            document.getElementById('grandTotal').value = grandTotal.toFixed(2);
+            document.getElementById('contingencyTotal').value = contingencyTotal.toFixed(2);
+            document.getElementById('ipTotal').value = ipCount > 0 && ipTotal > 0 ? ipTotal.toFixed(2) : '0.00';
+
+            const calculateCost = (efforts) => finalEfforts > 0 ? (efforts / finalEfforts * totalCost).toFixed(2) : '0.00';
+            document.getElementById('funcCost').value = calculateCost(funcEfforts);
+            document.getElementById('techCost').value = calculateCost(techEfforts);
+            document.getElementById('dmCost').value = calculateCost(dmEfforts);
+            document.getElementById('baseCost').value = calculateCost(baseTotal);
+            document.getElementById('pmCost').value = pmCost.toFixed(2);
+            document.getElementById('ossaCost').value = ossaCost.toFixed(2);
+            document.getElementById('grandCost').value = calculateCost(grandTotal);
+            document.getElementById('contingencyCost').value = totalCost.toFixed(2);
+            document.getElementById('ipCost').value = ipCount > 0 && ipTotal > 0 ? totalCost.toFixed(2) : '0.00';
+        }
+
+        function resetSummary() {
+            document.getElementById('funcEfforts').value = '0';
+            document.getElementById('techEfforts').value = '0';
+            document.getElementById('dmEfforts').value = '0';
+            document.getElementById('baseTotal').value = '0';
+            document.getElementById('pmEfforts').value = '220';
+            document.getElementById('ossaEfforts').value = '29';
+            document.getElementById('grandTotal').value = '0';
+            document.getElementById('contingencyTotal').value = '0';
+            document.getElementById('ipTotal').value = '0';
+            document.getElementById('funcCost').value = '0';
+            document.getElementById('techCost').value = '0';
+            document.getElementById('dmCost').value = '0';
+            document.getElementById('baseCost').value = '0';
+            document.getElementById('pmCost').value = '0';
+            document.getElementById('ossaCost').value = '0';
+            document.getElementById('grandCost').value = '0';
+            document.getElementById('contingencyCost').value = '0';
+            document.getElementById('ipCost').value = '0';
+        }
+
+        function updateDataMigration() {
+            const complexity = document.getElementById('dmComplexity').value;
+            if (!complexity) {
+                document.getElementById('dmExtraction').value = '';
+                document.getElementById('dmTransformation').value = '';
+                document.getElementById('dmLoad').value = '';
+                document.getElementById('dmTotal').textContent = '0';
+            } else {
+                const dm = dataMigration[complexity];
+                document.getElementById('dmExtraction').value = dm.extraction;
+                document.getElementById('dmTransformation').value = dm.transformation;
+                document.getElementById('dmLoad').value = dm.load;
+                document.getElementById('dmTotal').textContent = dm.total;
+            }
+            calculate();
+        }
+
+        function createNewOpportunity() {
+            resetForm();
+            document.querySelectorAll('.section.hidden, #buttonGroup').forEach(el => el.classList.remove('hidden'));
+            calculate();
+        }
+
+        function searchOpportunity() {
+            if (opportunities.length === 0) {
+                alert('No saved opportunities found.');
+                return;
+            }
+
+            const latestOpp = opportunities.reduce((latest, opp) => {
+                return !latest || opp.timestamp > latest.timestamp ? opp : latest;
+            }, null);
+
+            if (!latestOpp) {
+                alert('No valid opportunities found.');
+                return;
+            }
+
+            document.getElementById('oppName').value = latestOpp.oppName;
+            document.getElementById('countryCount').value = latestOpp.countryCount;
+            document.getElementById('empCount').value = latestOpp.empCount;
+            document.getElementById('payrollCount').value = latestOpp.payrollCount;
+            document.getElementById('dealSize').value = latestOpp.dealSize;
+            document.getElementById('oppStatus').value = latestOpp.oppStatus;
+            document.querySelectorAll('input[name="module"]').forEach(cb => {
+                cb.checked = latestOpp.modules.includes(cb.value);
+            });
+            document.getElementById('intSimple').value = latestOpp.intSimple;
+            document.getElementById('intMedium').value = latestOpp.intMedium;
+            document.getElementById('intComplex').value = latestOpp.intComplex;
+            document.getElementById('extSimple').value = latestOpp.extSimple;
+            document.getElementById('extMedium').value = latestOpp.extMedium;
+            document.getElementById('extComplex').value = latestOpp.extComplex;
+            document.getElementById('repSimple').value = latestOpp.repSimple;
+            document.getElementById('repMedium').value = latestOpp.repMedium;
+            document.getElementById('repComplex').value = latestOpp.repComplex;
+            document.getElementById('dmComplexity').value = latestOpp.dmComplexity;
+            document.getElementById('dmExtraction').value = latestOpp.dmExtraction;
+            document.getElementById('dmTransformation').value = latestOpp.dmTransformation;
+            document.getElementById('dmLoad').value = latestOpp.dmLoad;
+            document.getElementById('contingency').value = latestOpp.contingency;
+            document.getElementById('ipCount').value = latestOpp.ipCount;
+            document.getElementById('teamMEO').value = latestOpp.teamMEO;
+            document.getElementById('teamGSC').value = latestOpp.teamGSC;
+            document.getElementById('teamPharos').value = latestOpp.teamPharos;
+
+            document.querySelectorAll('.section.hidden, #buttonGroup').forEach(el => el.classList.remove('hidden'));
+            calculate();
+        }
+
+        function saveOpportunity() {
+            const oppName = document.getElementById('oppName').value;
+            if (!oppName) {
+                alert('Please enter an opportunity name.');
+                return;
+            }
+
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            let version = 1;
+            const existingOpp = opportunities.find(op => op.oppName === oppName);
+            if (existingOpp) {
+                const versions = opportunities
+                    .filter(op => op.oppName === oppName)
+                    .map(op => parseInt(op.version || 1));
+                version = versions.length ? Math.max(...versions) + 1 : 1;
+            }
+
+            const opportunity = {
+                oppName,
+                version,
+                timestamp,
+                displayName: `OC_HCM_${oppName}-v${version}-${timestamp}`,
+                countryCount: document.getElementById('countryCount').value,
+                empCount: document.getElementById('empCount').value,
+                payrollCount: document.getElementById('payrollCount').value,
+                dealSize: document.getElementById('dealSize').value,
+                oppStatus: document.getElementById('oppStatus').value,
+                modules: Array.from(document.querySelectorAll('input[name="module"]:checked')).map(cb => cb.value),
+                intSimple: document.getElementById('intSimple').value,
+                intMedium: document.getElementById('intMedium').value,
+                intComplex: document.getElementById('intComplex').value,
+                extSimple: document.getElementById('extSimple').value,
+                extMedium: document.getElementById('extMedium').value,
+                extComplex: document.getElementById('extComplex').value,
+                repSimple: document.getElementById('repSimple').value,
+                repMedium: document.getElementById('repMedium').value,
+                repComplex: document.getElementById('repComplex').value,
+                dmComplexity: document.getElementById('dmComplexity').value,
+                dmExtraction: document.getElementById('dmExtraction').value,
+                dmTransformation: document.getElementById('dmTransformation').value,
+                dmLoad: document.getElementById('dmLoad').value,
+                contingency: document.getElementById('contingency').value,
+                ipCount: document.getElementById('ipCount').value,
+                teamMEO: document.getElementById('teamMEO').value,
+                teamGSC: document.getElementById('teamGSC').value,
+                teamPharos: document.getElementById('teamPharos').value,
+                funcEfforts: document.getElementById('funcEfforts').value,
+                techEfforts: document.getElementById('techEfforts').value,
+                dmEfforts: document.getElementById('dmEfforts').value,
+                baseTotal: document.getElementById('baseTotal').value,
+                pmEfforts: document.getElementById('pmEfforts').value,
+                ossaEfforts: document.getElementById('ossaEfforts').value,
+                grandTotal: document.getElementById('grandTotal').value,
+                contingencyTotal: document.getElementById('contingencyTotal').value,
+                ipTotal: document.getElementById('ipTotal').value,
+                funcCost: document.getElementById('funcCost').value,
+                techCost: document.getElementById('techCost').value,
+                dmCost: document.getElementById('dmCost').value,
+                baseCost: document.getElementById('baseCost').value,
+                pmCost: document.getElementById('pmCost').value,
+                ossaCost: document.getElementById('ossaCost').value,
+                grandCost: document.getElementById('grandCost').value,
+                contingencyCost: document.getElementById('contingencyCost').value,
+                ipCost: document.getElementById('ipCost').value
+            };
+
+            opportunities.push(opportunity);
+            try {
+                localStorage.setItem('hcmOpportunities', JSON.stringify(opportunities));
+            } catch (e) {
+                console.error('Error saving to localStorage:', e);
+                alert('Failed to save opportunity due to storage limitations.');
+                return;
+            }
+            alert(`Opportunity saved as ${opportunity.displayName}!`);
+        }
+
+        function resetForm() {
+            document.getElementById('oppName').value = '';
+            document.getElementById('countryCount').value = '';
+            document.getElementById('empCount').value = '';
+            document.getElementById('payrollCount').value = '';
+            document.getElementById('dealSize').value = '';
+            document.getElementById('oppStatus').value = '';
+            document.querySelectorAll('input[name="module"]').forEach(cb => cb.checked = false);
+            document.getElementById('intSimple').value = '';
+            document.getElementById('intMedium').value = '';
+            document.getElementById('intComplex').value = '';
+            document.getElementById('extSimple').value = '';
+            document.getElementById('extMedium').value = '';
+            document.getElementById('extComplex').value = '';
+            document.getElementById('repSimple').value = '';
+            document.getElementById('repMedium').value = '';
+            document.getElementById('repComplex').value = '';
+            document.getElementById('dmComplexity').value = '';
+            document.getElementById('dmExtraction').value = '';
+            document.getElementById('dmTransformation').value = '';
+            document.getElementById('dmLoad').value = '';
+            document.getElementById('contingency').value = '';
+            document.getElementById('ipCount').value = '';
+            document.getElementById('teamMEO').value = '';
+            document.getElementById('teamGSC').value = '';
+            document.getElementById('teamPharos').value = '';
+            document.querySelectorAll('.section:not(#opportunitySection), #buttonGroup').forEach(el => el.classList.add('hidden'));
+            resetSummary();
+            calculate();
+        }
+
+        document.getElementById('createNewBtn').addEventListener('click', createNewOpportunity);
+        document.getElementById('searchBtn').addEventListener('click', searchOpportunity);
+        document.getElementById('saveButton').addEventListener('click', saveOpportunity);
+        document.getElementById('resetButton').addEventListener('click', resetForm);
+        document.getElementById('dmComplexity').addEventListener('change', updateDataMigration);
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('change', debounce(calculate, 100));
+        });
+
+        window.addEventListener('load', calculate);
+    </script>
+</body>
+</html>
